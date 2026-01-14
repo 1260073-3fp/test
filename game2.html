@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>小恐龍遊戲</title>
+<style>
+body{background:white;margin:20px;font-family:sans-serif;text-align:center}
+#game{width:600px;height:200px;border:1px solid #ccc;background:white;margin:0 auto;position:relative;overflow:hidden}
+#dino{position:absolute;bottom:0;left:50px;width:40px;height:50px;background:#333}
+.cactus{position:absolute;bottom:0;width:20px;background:green}
+#score{margin-top:10px;font-size:18px}
+#gameOver{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border:1px solid #333}
+</style>
+</head>
+<body>
+<h1>小恐龍遊戲</h1>
+<div id="game">
+<div id="dino"></div>
+<div id="gameOver">
+<h2>遊戲結束！</h2>
+<p>分數: <span id="finalScore">0</span></p>
+<button onclick="location.reload()">重新開始</button>
+</div>
+</div>
+<div id="score">分數: 0</div>
+
+<script>
+const dino=document.getElementById('dino');
+const game=document.getElementById('game');
+const scoreEl=document.getElementById('score');
+const finalScoreEl=document.getElementById('finalScore');
+const gameOverEl=document.getElementById('gameOver');
+
+let isJumping=false;
+let score=0;
+let gameActive=true;
+let speed=5;
+
+function jump(){
+if(!isJumping&&gameActive){
+isJumping=true;
+let up=setInterval(()=>{
+let b=parseInt(dino.style.bottom)||0;
+if(b>=100){
+clearInterval(up);
+let down=setInterval(()=>{
+let bb=parseInt(dino.style.bottom)||0;
+if(bb<=0){
+dino.style.bottom='0';
+clearInterval(down);
+isJumping=false;
+}else{
+dino.style.bottom=(bb-8)+'px';
+}
+},20);
+}else{
+dino.style.bottom=(b+8)+'px';
+}
+},20);
+}
+}
+
+function createCactus(){
+if(!gameActive)return;
+const c=document.createElement('div');
+c.className='cactus';
+c.style.height=(30+Math.random()*40)+'px';
+c.style.left='600px';
+game.appendChild(c);
+
+let pos=600;
+let move=setInterval(()=>{
+if(pos<-20){
+clearInterval(move);
+game.removeChild(c);
+if(gameActive){
+score++;
+scoreEl.textContent='分數: '+score;
+if(score%10===0)speed+=0.5;
+}
+}else{
+pos-=speed;
+c.style.left=pos+'px';
+
+const dr=dino.getBoundingClientRect();
+const cr=c.getBoundingClientRect();
+if(dr.left<cr.right&&dr.right>cr.left&&dr.top<cr.bottom&&dr.bottom>cr.top){
+gameActive=false;
+finalScoreEl.textContent=score;
+gameOverEl.style.display='block';
+clearInterval(move);
+}
+}
+},20);
+}
+
+setInterval(createCactus,1500);
+
+document.addEventListener('keydown',e=>{
+if(e.code==='Space'){
+jump();
+e.preventDefault();
+}
+});
+
+dino.addEventListener('click',jump);
+</script>
+</body>
+</html>
