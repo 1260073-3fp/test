@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>迷宮遊戲</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #000; /* 黑色背景 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 10 Vish;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    #mazeCanvas {
+      background-color: #000;
+      border: 2px solid #444;
+      display: block;
+    }
+    #instructions {
+      margin-top: 15px;
+      font-size: 16px;
+      text-align: center;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>迷宮遊戲</h1>
+  <canvas id="mazeCanvas" width="500" height="500"></canvas>
+  <div id="instructions">使用方向鍵 ← ↑ → ↓ 移動玩家（藍色方塊）</div>
+
+  <script>
+    // 迷宮設定
+    const canvas = document.getElementById('mazeCanvas');
+    const ctx = canvas.getContext('2d');
+    const cellSize = 25; // 每格 25x25 像素
+    const rows = Math.floor(canvas.height / cellSize);
+    const cols = Math.floor(canvas.width / cellSize);
+
+    // 迷宮地圖：0 = 道路（白色），1 = 牆（黑色）
+    const maze = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1],
+      [1,1,1,0,1,0,1,1,1,0,1,1,1,1,0,1,1,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1],
+      [1,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1],
+      [1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+      [1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];
+
+    // 玩家初始位置（必須在道路上）
+    let player = {
+      x: 1,
+      y: 1,
+      size: cellSize - 4 // 略小於格子，留邊距
+    };
+
+    // 繪製迷宮
+    function drawMaze() {
+      // 清空畫布（黑色背景）
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 繪製迷宮
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          if (maze[row][col] === 0) {
+            // 道路：白色
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+          }
+          // 牆不需特別畫（背景已是黑色）
+        }
+      }
+
+      // 繪製玩家（藍色）
+      ctx.fillStyle = '#4285F4';
+      ctx.fillRect(
+        player.x * cellSize + 2,
+        player.y * cellSize + 2,
+        player.size,
+        player.size
+      );
+    }
+
+    // 鍵盤控制
+    document.addEventListener('keydown', (e) => {
+      let newX = player.x;
+      let newY = player.y;
+
+      switch (e.key) {
+        case 'ArrowUp':
+          newY--;
+          break;
+        case 'ArrowDown':
+          newY++;
+          break;
+        case 'ArrowLeft':
+          newX--;
+          break;
+        case 'ArrowRight':
+          newX++;
+          break;
+        default:
+          return; // 忽略其他按鍵
+      }
+
+      // 檢查是否在邊界內且是道路
+      if (
+        newX >= 0 && newX < cols &&
+        newY >= 0 && newY < rows &&
+        maze[newY][newX] === 0
+      ) {
+        player.x = newX;
+        player.y = newY;
+        drawMaze();
+      }
+    });
+
+    // 初始繪製
+    drawMaze();
+  </script>
+</body>
+</html>
