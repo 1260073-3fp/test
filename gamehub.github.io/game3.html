@@ -37,7 +37,7 @@
 </head>
 <body>
   <h1>迷宮逃生遊戲</h1>
-  <canvas id="mazeCanvas" width="520" height="520"></canvas>
+  <canvas id="mazeCanvas" width="650" height="650"></canvas>
   <div id="instructions">使用方向鍵 ← ↑ → ↓ 移動玩家（藍色）<br>避開紅色鬼魂，抵達紅色終點！</div>
   <div id="status"></div>
 
@@ -47,25 +47,25 @@
     const statusEl = document.getElementById('status');
     
     const cellSize = 26;
-    const cols = Math.floor(canvas.width / cellSize);
-    const rows = Math.floor(canvas.height / cellSize);
+    const cols = Math.floor(canvas.width / cellSize); // 25
+    const rows = Math.floor(canvas.height / cellSize); // 25
     
     let maze = [];
     let player = { x: 1, y: 1 };
-    let ghost = { x: cols - 2, y: rows - 2 };
+    let ghost = { x: 1, y: 2 }; // ✅ 鬼一開始在玩家背後（正下方）
     let goal = { x: cols - 2, y: rows - 2 };
     let gameActive = true;
 
-    // 生成隨機迷宮（使用遞迴分割法簡化版）
+    // 生成更複雜的隨機迷宮
     function generateMaze() {
       // 初始化全牆
       maze = Array(rows).fill().map(() => Array(cols).fill(1));
       
-      // DFS 迷宮生成
+      // DFS 迷宮生成（更密集）
       function carve(x, y) {
         maze[y][x] = 0;
         const directions = [
-          [0, -2], [2, 0], [0, 2], [-2, 0] // 上、右、下、左
+          [0, -2], [2, 0], [0, 2], [-2, 0]
         ];
         // 打亂方向
         for (let i = directions.length - 1; i > 0; i--) {
@@ -77,8 +77,7 @@
           const nx = x + dx;
           const ny = y + dy;
           if (nx > 0 && nx < cols - 1 && ny > 0 && ny < rows - 1 && maze[ny][nx] === 1) {
-            // 打通中間牆
-            maze[y + dy / 2][x + dx / 2] = 0;
+            maze[y + Math.floor(dy / 2)][x + Math.floor(dx / 2)] = 0;
             carve(nx, ny);
           }
         }
@@ -86,10 +85,11 @@
       
       carve(1, 1);
       
-      // 確保終點可達
+      // 確保終點區域可達
       maze[rows - 2][cols - 2] = 0;
       maze[rows - 2][cols - 3] = 0;
       maze[rows - 3][cols - 2] = 0;
+      maze[rows - 3][cols - 3] = 0;
     }
 
     // 檢查座標是否有效道路
@@ -97,7 +97,7 @@
       return x >= 0 && x < cols && y >= 0 && y < rows && maze[y][x] === 0;
     }
 
-    // 鬼魂追蹤玩家（簡單 A* 近似）
+    // 鬼魂追蹤玩家
     function moveGhost() {
       if (!gameActive) return;
       
@@ -105,7 +105,6 @@
       let nextX = ghost.x;
       let nextY = ghost.y;
       
-      // 嘗試四個方向，選擇最接近玩家的
       const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]];
       for (const [dx, dy] of directions) {
         const nx = ghost.x + dx;
@@ -163,7 +162,7 @@
     function restartGame() {
       generateMaze();
       player = { x: 1, y: 1 };
-      ghost = { x: cols - 2, y: rows - 2 };
+      ghost = { x: 1, y: 2 }; // ✅ 每次重開，鬼都在玩家背後
       goal = { x: cols - 2, y: rows - 2 };
       gameActive = true;
       statusEl.textContent = "";
@@ -204,11 +203,11 @@
       }
     });
 
-    // 主遊戲循環：鬼魂每 400ms 移動一次
+    // 主遊戲循環：鬼魂每 600ms 移動一次（降低速度，增加難度）
     let ghostInterval;
     function gameLoop() {
       if (ghostInterval) clearInterval(ghostInterval);
-      ghostInterval = setInterval(moveGhost, 400);
+      ghostInterval = setInterval(moveGhost, 600); // ✅ 從 400 改為 600
     }
 
     // 開始遊戲

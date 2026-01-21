@@ -34,14 +34,14 @@ const gameOverEl=document.getElementById('gameOver');
 let isJumping=false;
 let score=0;
 let gameActive=true;
-let speed=5;
+let speed=4.5; // ✅ 降低初始速度，更容易跳過
 
 function jump(){
 if(!isJumping&&gameActive){
 isJumping=true;
 let up=setInterval(()=>{
 let b=parseInt(dino.style.bottom)||0;
-if(b>=100){
+if(b>=130){ // ✅ 跳得更高（原本 100）
 clearInterval(up);
 let down=setInterval(()=>{
 let bb=parseInt(dino.style.bottom)||0;
@@ -50,13 +50,13 @@ dino.style.bottom='0';
 clearInterval(down);
 isJumping=false;
 }else{
-dino.style.bottom=(bb-8)+'px';
+dino.style.bottom=(bb-10)+'px'; // ✅ 下降更快（原本 -8）
 }
-},20);
+},15); // ✅ 下降間隔縮短（原本 20）
 }else{
-dino.style.bottom=(b+8)+'px';
+dino.style.bottom=(b+10)+'px'; // ✅ 上升更快（原本 +8）
 }
-},20);
+},15); // ✅ 上升間隔縮短（原本 20）
 }
 }
 
@@ -76,7 +76,7 @@ game.removeChild(c);
 if(gameActive){
 score++;
 scoreEl.textContent='分數: '+score;
-if(score%10===0)speed+=0.5;
+if(score%10===0)speed+=0.3; // ✅ 速度增幅降低
 }
 }else{
 pos-=speed;
@@ -94,7 +94,7 @@ clearInterval(move);
 },20);
 }
 
-setInterval(createCactus,1500);
+setInterval(createCactus,2000); // ✅ 仙人掌生成間隔拉長（原本 1500）
 
 document.addEventListener('keydown',e=>{
 if(e.code==='Space'){

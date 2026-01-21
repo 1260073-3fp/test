@@ -17,12 +17,21 @@ html_snake_game = """
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 100vh;
+      overflow: hidden;
+    }
+    #gameContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 420px;
+      margin-top: 10px;
     }
     #gameCanvas {
       border: 1px solid #444;
       background-color: #000;
+      display: block;
     }
     #ui {
       margin-top: 15px;
@@ -30,6 +39,8 @@ html_snake_game = """
       gap: 20px;
       align-items: center;
       font-size: 1.1em;
+      width: 100%;
+      justify-content: center;
     }
     #restartBtn {
       padding: 6px 14px;
@@ -53,6 +64,7 @@ html_snake_game = """
       border-radius: 10px;
       text-align: center;
       display: none;
+      z-index: 10;
     }
     .legend {
       display: flex;
@@ -60,23 +72,31 @@ html_snake_game = """
       margin-top: 10px;
       font-size: 0.9em;
       opacity: 0.8;
+      width: 100%;
+      justify-content: center;
     }
     .red { color: #FF0000; }
     .yellow { color: #FFFF00; }
+    h1 {
+      margin-bottom: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <h1>貪食蛇：雙蘋果挑戰</h1>
-  <canvas id="gameCanvas" width="400" height="400"></canvas>
-  
-  <div id="ui">
-    <div id="score">分數: 0</div>
-    <button id="restartBtn">重新開始</button>
-  </div>
-  
-  <div class="legend">
-    <span><span class="red">●</span> 紅蘋果 (+1 長度, +10 分)</span>
-    <span><span class="yellow">●</span> 黃蘋果 (+2 長度, +20 分)</span>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    
+    <div id="ui">
+      <div id="score">分數: 0</div>
+      <button id="restartBtn">重新開始</button>
+    </div>
+    
+    <div class="legend">
+      <span><span class="red">●</span> 紅蘋果 (+1 長度, +10 分)</span>
+      <span><span class="yellow">●</span> 黃蘋果 (+2 長度, +20 分)</span>
+    </div>
   </div>
 
   <div id="gameOver">
@@ -97,15 +117,17 @@ html_snake_game = """
     const CELL_SIZE = 20;
     const COLS = canvas.width / CELL_SIZE;
     const ROWS = canvas.height / CELL_SIZE;
+    const MAX_APPLES = 3;
 
     let snake = [];
-    let food = { x: 0, y: 0, type: 'red' };
+    let apples = [];
     let direction = 'right';
     let nextDirection = 'right';
     let score = 0;
     let gameRunning = false;
-    let gameSpeed = 140;
+    let gameSpeed = 200; // 🐢 慢速且固定不變
     let gameInterval;
+    let appleSpawnInterval;
 
     function initGame() {
       snake = [
@@ -113,35 +135,56 @@ html_snake_game = """
         { x: 4, y: 10 },
         { x: 3, y: 10 }
       ];
+      apples = [];
       direction = 'right';
       nextDirection = 'right';
       score = 0;
       scoreEl.textContent = `分數: ${score}`;
       gameOverEl.style.display = 'none';
-      generateFood();
       gameRunning = true;
+      
       if (gameInterval) clearInterval(gameInterval);
+      if (appleSpawnInterval) clearInterval(appleSpawnInterval);
+      
       gameInterval = setInterval(gameLoop, gameSpeed);
+      appleSpawnInterval = setInterval(() => {
+        if (gameRunning && apples.length < MAX_APPLES) {
+          generateApple();
+        }
+      }, 3000);
+      
+      generateApple();
     }
 
-    function generateFood() {
-      let newFood;
-      let onSnake;
+    function generateApple() {
+      let newApple;
+      let onSnakeOrApple;
+      let attempts = 0;
       do {
-        onSnake = false;
-        newFood = {
+        attempts++;
+        if (attempts > 100) return;
+        onSnakeOrApple = false;
+        newApple = {
           x: Math.floor(Math.random() * COLS),
           y: Math.floor(Math.random() * ROWS),
           type: Math.random() < 0.7 ? 'red' : 'yellow'
         };
         for (const seg of snake) {
-          if (seg.x === newFood.x && seg.y === newFood.y) {
-            onSnake = true;
+          if (seg.x === newApple.x && seg.y === newApple.y) {
+            onSnakeOrApple = true;
             break;
           }
         }
-      } while (onSnake);
-      food = newFood;
+        if (!onSnakeOrApple) {
+          for (const apple of apples) {
+            if (apple.x === newApple.x && apple.y === newApple.y) {
+              onSnakeOrApple = true;
+              break;
+            }
+          }
+        }
+      } while (onSnakeOrApple);
+      apples.push(newApple);
     }
 
     function gameLoop() {
@@ -156,11 +199,13 @@ html_snake_game = """
         case 'right': head.x++; break;
       }
 
+      // 撞牆
       if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
         endGame();
         return;
       }
 
+      // 撞自己
       for (const seg of snake) {
         if (seg.x === head.x && seg.y === head.y) {
           endGame();
@@ -170,24 +215,33 @@ html_snake_game = """
 
       snake.unshift(head);
 
-      if (head.x === food.x && head.y === food.y) {
-        if (food.type === 'red') {
-          score += 10;
-        } else {
-          score += 20;
+      let appleEaten = false;
+      for (let i = apples.length - 1; i >= 0; i--) {
+        if (head.x === apples[i].x && head.y === apples[i].y) {
+          if (apples[i].type === 'red') {
+            score += 10;
+          } else {
+            score += 20;
+          }
+          apples.splice(i, 1);
+          appleEaten = true;
+          
+          if (apples.length < MAX_APPLES) {
+            setTimeout(() => {
+              if (gameRunning) generateApple();
+            }, 100);
+          }
         }
-        scoreEl.textContent = `分數: ${score}`;
-        generateFood();
+      }
 
-        if (score % 50 === 0 && gameSpeed > 70) {
-          gameSpeed -= 8;
-          clearInterval(gameInterval);
-          gameInterval = setInterval(gameLoop, gameSpeed);
-        }
-      } else {
+      if (!appleEaten) {
         snake.pop();
       }
 
+      scoreEl.textContent = `分數: ${score}`;
+      
+      // ✂️ 已移除：不再根據分數提升速度 → 蛇速永遠固定為 200ms/步
+      
       draw();
     }
 
@@ -200,13 +254,16 @@ html_snake_game = """
         ctx.fillRect(seg.x * CELL_SIZE, seg.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
       }
 
-      ctx.fillStyle = food.type === 'red' ? '#FF0000' : '#FFFF00';
-      ctx.fillRect(food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      for (const apple of apples) {
+        ctx.fillStyle = apple.type === 'red' ? '#FF0000' : '#FFFF00';
+        ctx.fillRect(apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      }
     }
 
     function endGame() {
       gameRunning = false;
       clearInterval(gameInterval);
+      clearInterval(appleSpawnInterval);
       finalScoreEl.textContent = score;
       gameOverEl.style.display = 'block';
     }
