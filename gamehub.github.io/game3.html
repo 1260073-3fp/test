@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>迷宮遊戲</title>
+  <title>迷宮逃生遊戲</title>
   <style>
     body {
       margin: 0;
       padding: 20px;
-      background-color: #000; /* 黑色背景 */
+      background-color: #000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 10 Vish;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
       color: white;
     }
@@ -28,116 +28,191 @@
       text-align: center;
       color: #ccc;
     }
+    #status {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #ff6b6b;
+    }
   </style>
 </head>
 <body>
-  <h1>迷宮遊戲</h1>
-  <canvas id="mazeCanvas" width="500" height="500"></canvas>
-  <div id="instructions">使用方向鍵 ← ↑ → ↓ 移動玩家（藍色方塊）</div>
+  <h1>迷宮逃生遊戲</h1>
+  <canvas id="mazeCanvas" width="520" height="520"></canvas>
+  <div id="instructions">使用方向鍵 ← ↑ → ↓ 移動玩家（藍色）<br>避開紅色鬼魂，抵達紅色終點！</div>
+  <div id="status"></div>
 
   <script>
-    // 迷宮設定
     const canvas = document.getElementById('mazeCanvas');
     const ctx = canvas.getContext('2d');
-    const cellSize = 25; // 每格 25x25 像素
-    const rows = Math.floor(canvas.height / cellSize);
+    const statusEl = document.getElementById('status');
+    
+    const cellSize = 26;
     const cols = Math.floor(canvas.width / cellSize);
+    const rows = Math.floor(canvas.height / cellSize);
+    
+    let maze = [];
+    let player = { x: 1, y: 1 };
+    let ghost = { x: cols - 2, y: rows - 2 };
+    let goal = { x: cols - 2, y: rows - 2 };
+    let gameActive = true;
 
-    // 迷宮地圖：0 = 道路（白色），1 = 牆（黑色）
-    const maze = [
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1],
-      [1,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
-      [1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
-      [1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1],
-      [1,1,1,0,1,0,1,1,1,0,1,1,1,1,0,1,1,1,0,1],
-      [1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,1],
-      [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1],
-      [1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,1],
-      [1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,1,0,1],
-      [1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1],
-      [1,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1],
-      [1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-    ];
-
-    // 玩家初始位置（必須在道路上）
-    let player = {
-      x: 1,
-      y: 1,
-      size: cellSize - 4 // 略小於格子，留邊距
-    };
-
-    // 繪製迷宮
-    function drawMaze() {
-      // 清空畫布（黑色背景）
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // 繪製迷宮
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          if (maze[row][col] === 0) {
-            // 道路：白色
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+    // 生成隨機迷宮（使用遞迴分割法簡化版）
+    function generateMaze() {
+      // 初始化全牆
+      maze = Array(rows).fill().map(() => Array(cols).fill(1));
+      
+      // DFS 迷宮生成
+      function carve(x, y) {
+        maze[y][x] = 0;
+        const directions = [
+          [0, -2], [2, 0], [0, 2], [-2, 0] // 上、右、下、左
+        ];
+        // 打亂方向
+        for (let i = directions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [directions[i], directions[j]] = [directions[j], directions[i]];
+        }
+        
+        for (const [dx, dy] of directions) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx > 0 && nx < cols - 1 && ny > 0 && ny < rows - 1 && maze[ny][nx] === 1) {
+            // 打通中間牆
+            maze[y + dy / 2][x + dx / 2] = 0;
+            carve(nx, ny);
           }
-          // 牆不需特別畫（背景已是黑色）
         }
       }
+      
+      carve(1, 1);
+      
+      // 確保終點可達
+      maze[rows - 2][cols - 2] = 0;
+      maze[rows - 2][cols - 3] = 0;
+      maze[rows - 3][cols - 2] = 0;
+    }
 
-      // 繪製玩家（藍色）
+    // 檢查座標是否有效道路
+    function isPath(x, y) {
+      return x >= 0 && x < cols && y >= 0 && y < rows && maze[y][x] === 0;
+    }
+
+    // 鬼魂追蹤玩家（簡單 A* 近似）
+    function moveGhost() {
+      if (!gameActive) return;
+      
+      let bestDist = Infinity;
+      let nextX = ghost.x;
+      let nextY = ghost.y;
+      
+      // 嘗試四個方向，選擇最接近玩家的
+      const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+      for (const [dx, dy] of directions) {
+        const nx = ghost.x + dx;
+        const ny = ghost.y + dy;
+        if (isPath(nx, ny)) {
+          const dist = Math.abs(nx - player.x) + Math.abs(ny - player.y);
+          if (dist < bestDist) {
+            bestDist = dist;
+            nextX = nx;
+            nextY = ny;
+          }
+        }
+      }
+      
+      ghost.x = nextX;
+      ghost.y = nextY;
+      
+      // 檢查是否碰到玩家
+      if (ghost.x === player.x && ghost.y === player.y) {
+        statusEl.textContent = "被鬼抓到了！遊戲重新開始...";
+        setTimeout(restartGame, 1500);
+        gameActive = false;
+      }
+    }
+
+    // 繪製遊戲
+    function draw() {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // 畫迷宮道路（白色）
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (maze[y][x] === 0) {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          }
+        }
+      }
+      
+      // 畫終點（紅色）
+      ctx.fillStyle = '#FF4444';
+      ctx.fillRect(goal.x * cellSize, goal.y * cellSize, cellSize, cellSize);
+      
+      // 畫鬼魂（深紅）
+      ctx.fillStyle = '#CC0000';
+      ctx.fillRect(ghost.x * cellSize, ghost.y * cellSize, cellSize, cellSize);
+      
+      // 畫玩家（藍色）
       ctx.fillStyle = '#4285F4';
-      ctx.fillRect(
-        player.x * cellSize + 2,
-        player.y * cellSize + 2,
-        player.size,
-        player.size
-      );
+      ctx.fillRect(player.x * cellSize, player.y * cellSize, cellSize, cellSize);
+    }
+
+    // 重新開始遊戲
+    function restartGame() {
+      generateMaze();
+      player = { x: 1, y: 1 };
+      ghost = { x: cols - 2, y: rows - 2 };
+      goal = { x: cols - 2, y: rows - 2 };
+      gameActive = true;
+      statusEl.textContent = "";
+      draw();
+      gameLoop();
     }
 
     // 鍵盤控制
     document.addEventListener('keydown', (e) => {
+      if (!gameActive) return;
+      
       let newX = player.x;
       let newY = player.y;
-
+      
       switch (e.key) {
-        case 'ArrowUp':
-          newY--;
-          break;
-        case 'ArrowDown':
-          newY++;
-          break;
-        case 'ArrowLeft':
-          newX--;
-          break;
-        case 'ArrowRight':
-          newX++;
-          break;
-        default:
-          return; // 忽略其他按鍵
+        case 'ArrowUp':    newY--; break;
+        case 'ArrowDown':  newY++; break;
+        case 'ArrowLeft':  newX--; break;
+        case 'ArrowRight': newX++; break;
+        default: return;
       }
-
-      // 檢查是否在邊界內且是道路
-      if (
-        newX >= 0 && newX < cols &&
-        newY >= 0 && newY < rows &&
-        maze[newY][newX] === 0
-      ) {
+      
+      if (isPath(newX, newY)) {
         player.x = newX;
         player.y = newY;
-        drawMaze();
+        
+        // 檢查是否到達終點
+        if (player.x === goal.x && player.y === goal.y) {
+          statusEl.textContent = "恭喜逃脫成功！";
+          gameActive = false;
+          setTimeout(() => {
+            statusEl.textContent = "開始新一局...";
+            setTimeout(restartGame, 1000);
+          }, 1500);
+        }
+        
+        draw();
       }
     });
 
-    // 初始繪製
-    drawMaze();
+    // 主遊戲循環：鬼魂每 400ms 移動一次
+    let ghostInterval;
+    function gameLoop() {
+      if (ghostInterval) clearInterval(ghostInterval);
+      ghostInterval = setInterval(moveGhost, 400);
+    }
+
+    // 開始遊戲
+    restartGame();
   </script>
 </body>
 </html>
