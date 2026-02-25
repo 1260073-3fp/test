@@ -1,217 +1,898 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>迷宮逃生遊戲</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      background-color: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
-    #mazeCanvas {
-      background-color: #000;
-      border: 2px solid #444;
-      display: block;
-    }
-    #instructions {
-      margin-top: 15px;
-      font-size: 16px;
-      text-align: center;
-      color: #ccc;
-    }
-    #status {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #ff6b6b;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>簡易迷宮鬼捉人</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: none;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        .game-wrapper {
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            border: 3px solid #4a90e2;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .game-header {
+            padding: 15px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 2px solid #4a90e2;
+        }
+        
+        .game-title {
+            color: #4a90e2;
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+        
+        .game-subtitle {
+            color: #ddd;
+            font-size: 14px;
+        }
+        
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border-bottom: 1px solid #333;
+        }
+        
+        .stat-box {
+            background: rgba(30, 30, 40, 0.8);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        
+        .game-board-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: #111;
+        }
+        
+        .game-board {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 550px;
+            max-height: 550px;
+            margin: 0 auto;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls-section {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-top: 1px solid #333;
+        }
+        
+        .controls-info {
+            color: #aaa;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .keyboard-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
+            width: 200px;
+            margin: 0 auto;
+        }
+        
+        .control-key {
+            background: linear-gradient(to bottom, #555, #333);
+            border: 2px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 3px 0 #222;
+        }
+        
+        .control-key:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #222;
+        }
+        
+        .key-up {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .key-left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        .key-down {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        
+        .key-right {
+            grid-column: 3;
+            grid-row: 2;
+        }
+        
+        .key-space {
+            grid-column: 1 / span 3;
+            grid-row: 3;
+            font-size: 16px;
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            margin-top: 5px;
+        }
+        
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid #4a90e2;
+            z-index: 100;
+            display: none;
+            max-width: 80%;
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+        }
+        
+        .message-title {
+            font-size: 24px;
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+        
+        .message-content {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .message-button {
+            background: linear-gradient(to bottom, #4a90e2, #357ae8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .message-button:hover {
+            background: linear-gradient(to bottom, #5a9fff, #478aff);
+            transform: translateY(-2px);
+        }
+        
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 50;
+            display: none;
+        }
+        
+        @media (max-height: 700px) {
+            .game-stats {
+                padding: 5px 10px;
+            }
+            
+            .game-board-container {
+                padding: 10px;
+            }
+            
+            .controls-section {
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .game-title {
+                font-size: 20px;
+            }
+            
+            .keyboard-controls {
+                width: 180px;
+            }
+            
+            .control-key {
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .key-space {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>迷宮逃生遊戲</h1>
-  <canvas id="mazeCanvas" width="650" height="650"></canvas>
-  <div id="instructions">使用方向鍵 ← ↑ → ↓ 移動玩家（藍色）<br>避開紅色鬼魂，抵達紅色終點！</div>
-  <div id="status"></div>
+    <div class="game-wrapper">
+        <div class="game-header">
+            <h1 class="game-title">簡易迷宮鬼捉人</h1>
+            <p class="game-subtitle">避開鬼魂，到達出口！</p>
+        </div>
+        
+        <div class="game-stats">
+            <div class="stat-box">
+                <div class="stat-label">生命</div>
+                <div class="stat-value" id="lives">3</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">分數</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">時間</div>
+                <div class="stat-value" id="time">60</div>
+            </div>
+        </div>
+        
+        <div class="game-board-container">
+            <div class="game-board">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls-section">
+            <div class="controls-info">使用方向鍵或按鈕移動</div>
+            <div class="keyboard-controls">
+                <div class="control-key key-up" id="btnUp">↑</div>
+                <div class="control-key key-left" id="btnLeft">←</div>
+                <div class="control-key key-down" id="btnDown">↓</div>
+                <div class="control-key key-right" id="btnRight">→</div>
+                <div class="control-key key-space" id="btnStart">開始遊戲</div>
+            </div>
+        </div>
+        
+        <div class="game-overlay" id="gameOverlay"></div>
+        <div class="game-message" id="gameMessage">
+            <div class="message-title" id="messageTitle">遊戲開始</div>
+            <div class="message-content" id="messageContent">點擊開始按鈕開始遊戲</div>
+            <button class="message-button" id="messageButton">確定</button>
+        </div>
+    </div>
 
-  <script>
-    const canvas = document.getElementById('mazeCanvas');
-    const ctx = canvas.getContext('2d');
-    const statusEl = document.getElementById('status');
-    
-    const cellSize = 26;
-    const cols = Math.floor(canvas.width / cellSize); // 25
-    const rows = Math.floor(canvas.height / cellSize); // 25
-    
-    let maze = [];
-    let player = { x: 1, y: 1 };
-    let ghost = { x: 1, y: 2 }; // ✅ 鬼一開始在玩家背後（正下方）
-    let goal = { x: cols - 2, y: rows - 2 };
-    let gameActive = true;
-
-    // 生成更複雜的隨機迷宮
-    function generateMaze() {
-      // 初始化全牆
-      maze = Array(rows).fill().map(() => Array(cols).fill(1));
-      
-      // DFS 迷宮生成（更密集）
-      function carve(x, y) {
-        maze[y][x] = 0;
-        const directions = [
-          [0, -2], [2, 0], [0, 2], [-2, 0]
-        ];
-        // 打亂方向
-        for (let i = directions.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [directions[i], directions[j]] = [directions[j], directions[i]];
+    <script>
+        // 鎖定螢幕方向
+        function lockScreenOrientation() {
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('portrait').catch(() => {
+                    console.log('螢幕方向鎖定失敗');
+                });
+            }
         }
         
-        for (const [dx, dy] of directions) {
-          const nx = x + dx;
-          const ny = y + dy;
-          if (nx > 0 && nx < cols - 1 && ny > 0 && ny < rows - 1 && maze[ny][nx] === 1) {
-            maze[y + Math.floor(dy / 2)][x + Math.floor(dx / 2)] = 0;
-            carve(nx, ny);
-          }
-        }
-      }
-      
-      carve(1, 1);
-      
-      // 確保終點區域可達
-      maze[rows - 2][cols - 2] = 0;
-      maze[rows - 2][cols - 3] = 0;
-      maze[rows - 3][cols - 2] = 0;
-      maze[rows - 3][cols - 3] = 0;
-    }
-
-    // 檢查座標是否有效道路
-    function isPath(x, y) {
-      return x >= 0 && x < cols && y >= 0 && y < rows && maze[y][x] === 0;
-    }
-
-    // 鬼魂追蹤玩家
-    function moveGhost() {
-      if (!gameActive) return;
-      
-      let bestDist = Infinity;
-      let nextX = ghost.x;
-      let nextY = ghost.y;
-      
-      const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]];
-      for (const [dx, dy] of directions) {
-        const nx = ghost.x + dx;
-        const ny = ghost.y + dy;
-        if (isPath(nx, ny)) {
-          const dist = Math.abs(nx - player.x) + Math.abs(ny - player.y);
-          if (dist < bestDist) {
-            bestDist = dist;
-            nextX = nx;
-            nextY = ny;
-          }
-        }
-      }
-      
-      ghost.x = nextX;
-      ghost.y = nextY;
-      
-      // 檢查是否碰到玩家
-      if (ghost.x === player.x && ghost.y === player.y) {
-        statusEl.textContent = "被鬼抓到了！遊戲重新開始...";
-        setTimeout(restartGame, 1500);
-        gameActive = false;
-      }
-    }
-
-    // 繪製遊戲
-    function draw() {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // 畫迷宮道路（白色）
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          if (maze[y][x] === 0) {
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-          }
-        }
-      }
-      
-      // 畫終點（紅色）
-      ctx.fillStyle = '#FF4444';
-      ctx.fillRect(goal.x * cellSize, goal.y * cellSize, cellSize, cellSize);
-      
-      // 畫鬼魂（深紅）
-      ctx.fillStyle = '#CC0000';
-      ctx.fillRect(ghost.x * cellSize, ghost.y * cellSize, cellSize, cellSize);
-      
-      // 畫玩家（藍色）
-      ctx.fillStyle = '#4285F4';
-      ctx.fillRect(player.x * cellSize, player.y * cellSize, cellSize, cellSize);
-    }
-
-    // 重新開始遊戲
-    function restartGame() {
-      generateMaze();
-      player = { x: 1, y: 1 };
-      ghost = { x: 1, y: 2 }; // ✅ 每次重開，鬼都在玩家背後
-      goal = { x: cols - 2, y: rows - 2 };
-      gameActive = true;
-      statusEl.textContent = "";
-      draw();
-      gameLoop();
-    }
-
-    // 鍵盤控制
-    document.addEventListener('keydown', (e) => {
-      if (!gameActive) return;
-      
-      let newX = player.x;
-      let newY = player.y;
-      
-      switch (e.key) {
-        case 'ArrowUp':    newY--; break;
-        case 'ArrowDown':  newY++; break;
-        case 'ArrowLeft':  newX--; break;
-        case 'ArrowRight': newX++; break;
-        default: return;
-      }
-      
-      if (isPath(newX, newY)) {
-        player.x = newX;
-        player.y = newY;
+        // 防止滾動
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.tagName !== 'CANVAS') {
+                e.preventDefault();
+            }
+        }, { passive: false });
         
-        // 檢查是否到達終點
-        if (player.x === goal.x && player.y === goal.y) {
-          statusEl.textContent = "恭喜逃脫成功！";
-          gameActive = false;
-          setTimeout(() => {
-            statusEl.textContent = "開始新一局...";
-            setTimeout(restartGame, 1000);
-          }, 1500);
+        // 遊戲變數
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 設定畫布尺寸
+        function resizeCanvas() {
+            const board = document.querySelector('.game-board');
+            canvas.width = board.clientWidth;
+            canvas.height = board.clientHeight;
         }
         
-        draw();
-      }
-    });
-
-    // 主遊戲循環：鬼魂每 600ms 移動一次（降低速度，增加難度）
-    let ghostInterval;
-    function gameLoop() {
-      if (ghostInterval) clearInterval(ghostInterval);
-      ghostInterval = setInterval(moveGhost, 600); // ✅ 從 400 改為 600
-    }
-
-    // 開始遊戲
-    restartGame();
-  </script>
+        // 初始化遊戲
+        let gameState = 'idle'; // idle, playing, gameover, win
+        let lives = 3;
+        let score = 0;
+        let timeLeft = 60;
+        
+        // 迷宮設定
+        let maze = [];
+        let cellSize = 0;
+        let cols = 0;
+        let rows = 0;
+        
+        // 玩家設定
+        let player = {
+            x: 1,
+            y: 1,
+            color: '#4a90e2'
+        };
+        
+        // 鬼魂設定（只有一個）
+        let ghost = {
+            x: 0,
+            y: 0,
+            color: '#e74c3c',
+            speed: 0.5,
+            direction: 0
+        };
+        
+        // 出口設定
+        let exit = {
+            x: 0,
+            y: 0,
+            color: '#2ecc71'
+        };
+        
+        // 生成簡單迷宮
+        function generateMaze() {
+            // 計算格子大小和行列數
+            cellSize = Math.min(
+                Math.floor(canvas.width / 25),
+                Math.floor(canvas.height / 25)
+            );
+            cols = Math.floor(canvas.width / cellSize);
+            rows = Math.floor(canvas.height / cellSize);
+            
+            // 確保是奇數
+            if (cols % 2 === 0) cols--;
+            if (rows % 2 === 0) rows--;
+            
+            // 初始化迷宮
+            maze = Array(rows).fill().map(() => Array(cols).fill(1));
+            
+            // 簡單迷宮生成演算法
+            function carve(x, y) {
+                maze[y][x] = 0;
+                
+                // 四個方向
+                const directions = [
+                    [0, -2], [2, 0], [0, 2], [-2, 0]
+                ];
+                
+                // 隨機排序方向
+                directions.sort(() => Math.random() - 0.5);
+                
+                for (const [dx, dy] of directions) {
+                    const nx = x + dx;
+                    const ny = y + dy;
+                    
+                    if (nx > 0 && nx < cols - 1 && ny > 0 && ny < rows - 1 && maze[ny][nx] === 1) {
+                        maze[y + dy/2][x + dx/2] = 0;
+                        carve(nx, ny);
+                    }
+                }
+            }
+            
+            // 從起點開始
+            carve(1, 1);
+            
+            // 設定出口在右下角
+            exit.x = cols - 2;
+            exit.y = rows - 2;
+            maze[exit.y][exit.x] = 0;
+            
+            // 確保出口附近暢通
+            if (maze[exit.y-1][exit.x] === 1) maze[exit.y-1][exit.x] = 0;
+            if (maze[exit.y][exit.x-1] === 1) maze[exit.y][exit.x-1] = 0;
+            
+            // 設定玩家起始位置
+            player.x = 1;
+            player.y = 1;
+            
+            // 設定鬼魂位置（遠離玩家）
+            do {
+                ghost.x = Math.floor(Math.random() * (cols - 2)) + 1;
+                ghost.y = Math.floor(Math.random() * (rows - 2)) + 1;
+            } while (maze[ghost.y][ghost.x] !== 0 || 
+                    (Math.abs(ghost.x - player.x) < 5 && Math.abs(ghost.y - player.y) < 5));
+            
+            // 調整鬼魂速度
+            ghost.speed = 0.5 + Math.random() * 0.3;
+        }
+        
+        // 更新遊戲狀態
+        function update() {
+            if (gameState !== 'playing') return;
+            
+            // 更新鬼魂位置
+            updateGhost();
+            
+            // 檢查碰撞
+            checkCollisions();
+            
+            // 檢查勝利
+            if (player.x === exit.x && player.y === exit.y) {
+                winGame();
+                return;
+            }
+            
+            // 更新顯示
+            draw();
+        }
+        
+        // 更新鬼魂移動
+        function updateGhost() {
+            // 簡單的追蹤邏輯
+            const directions = [
+                [0, -1], [1, 0], [0, 1], [-1, 0]
+            ];
+            
+            // 有機率隨機移動，有機率追蹤玩家
+            if (Math.random() < 0.3) {
+                // 隨機移動
+                ghost.direction = Math.floor(Math.random() * 4);
+            } else {
+                // 追蹤玩家
+                const dx = player.x - ghost.x;
+                const dy = player.y - ghost.y;
+                
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    ghost.direction = dx > 0 ? 1 : 3;
+                } else {
+                    ghost.direction = dy > 0 ? 2 : 0;
+                }
+            }
+            
+            // 嘗試移動
+            const moveX = directions[ghost.direction][0];
+            const moveY = directions[ghost.direction][1];
+            
+            const newX = ghost.x + moveX;
+            const newY = ghost.y + moveY;
+            
+            if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && maze[newY][newX] === 0) {
+                ghost.x = newX;
+                ghost.y = newY;
+            }
+        }
+        
+        // 檢查碰撞
+        function checkCollisions() {
+            // 檢查鬼魂碰撞
+            if (player.x === ghost.x && player.y === ghost.y) {
+                lives--;
+                updateStats();
+                
+                if (lives <= 0) {
+                    gameOver();
+                } else {
+                    // 重新放置玩家
+                    player.x = 1;
+                    player.y = 1;
+                    showMessage('被鬼魂抓到！', `失去一條生命，剩餘 ${lives} 條`);
+                }
+            }
+        }
+        
+        // 繪製遊戲
+        function draw() {
+            // 清除畫布
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 繪製迷宮
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    if (maze[y][x] === 1) {
+                        ctx.fillStyle = '#333';
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                        
+                        // 牆壁邊框
+                        ctx.strokeStyle = '#444';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+            
+            // 繪製出口
+            ctx.fillStyle = exit.color;
+            ctx.fillRect(
+                exit.x * cellSize + 3,
+                exit.y * cellSize + 3,
+                cellSize - 6,
+                cellSize - 6
+            );
+            
+            // 出口閃爍效果
+            if (Math.sin(Date.now() / 300) > 0) {
+                ctx.fillStyle = '#27ae60';
+                ctx.fillRect(
+                    exit.x * cellSize + 6,
+                    exit.y * cellSize + 6,
+                    cellSize - 12,
+                    cellSize - 12
+                );
+            }
+            
+            // 繪製鬼魂
+            drawGhost();
+            
+            // 繪製玩家
+            drawPlayer();
+        }
+        
+        // 繪製鬼魂
+        function drawGhost() {
+            ctx.fillStyle = ghost.color;
+            
+            // 鬼魂本體
+            ctx.beginPath();
+            ctx.arc(
+                ghost.x * cellSize + cellSize/2,
+                ghost.y * cellSize + cellSize/2,
+                cellSize/2 - 2,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            
+            // 鬼魂底部波浪
+            ctx.beginPath();
+            ctx.moveTo(ghost.x * cellSize + 2, ghost.y * cellSize + cellSize/2);
+            for (let i = 0; i < 3; i++) {
+                const x = ghost.x * cellSize + 2 + (i * (cellSize - 4) / 2);
+                const y = ghost.y * cellSize + cellSize/2 + Math.sin(Date.now()/200 + i) * 3;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(ghost.x * cellSize + cellSize - 2, ghost.y * cellSize + cellSize/2);
+            ctx.fill();
+            
+            // 眼睛
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(
+                ghost.x * cellSize + cellSize/3,
+                ghost.y * cellSize + cellSize/3,
+                cellSize/6,
+                0,
+                Math.PI * 2
+            );
+            ctx.arc(
+                ghost.x * cellSize + 2*cellSize/3,
+                ghost.y * cellSize + cellSize/3,
+                cellSize/6,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            
+            // 瞳孔
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(
+                ghost.x * cellSize + cellSize/3,
+                ghost.y * cellSize + cellSize/3,
+                cellSize/12,
+                0,
+                Math.PI * 2
+            );
+            ctx.arc(
+                ghost.x * cellSize + 2*cellSize/3,
+                ghost.y * cellSize + cellSize/3,
+                cellSize/12,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+        }
+        
+        // 繪製玩家
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            
+            // 玩家本體
+            ctx.beginPath();
+            ctx.arc(
+                player.x * cellSize + cellSize/2,
+                player.y * cellSize + cellSize/2,
+                cellSize/2 - 2,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            
+            // 眼睛
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(
+                player.x * cellSize + cellSize/3,
+                player.y * cellSize + cellSize/3,
+                cellSize/6,
+                0,
+                Math.PI * 2
+            );
+            ctx.arc(
+                player.x * cellSize + 2*cellSize/3,
+                player.y * cellSize + cellSize/3,
+                cellSize/6,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            
+            // 瞳孔
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(
+                player.x * cellSize + cellSize/3,
+                player.y * cellSize + cellSize/3,
+                cellSize/12,
+                0,
+                Math.PI * 2
+            );
+            ctx.arc(
+                player.x * cellSize + 2*cellSize/3,
+                player.y * cellSize + cellSize/3,
+                cellSize/12,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            
+            // 嘴巴
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(
+                player.x * cellSize + cellSize/2,
+                player.y * cellSize + 2*cellSize/3,
+                cellSize/4,
+                0,
+                Math.PI
+            );
+            ctx.stroke();
+        }
+        
+        // 移動玩家
+        function movePlayer(dx, dy) {
+            if (gameState !== 'playing') return;
+            
+            const newX = player.x + dx;
+            const newY = player.y + dy;
+            
+            if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && maze[newY][newX] === 0) {
+                player.x = newX;
+                player.y = newY;
+                score += 1; // 移動得分
+                updateStats();
+            }
+        }
+        
+        // 開始遊戲
+        function startGame() {
+            if (gameState === 'playing') return;
+            
+            gameState = 'playing';
+            lives = 3;
+            score = 0;
+            timeLeft = 60;
+            
+            updateStats();
+            generateMaze();
+            draw();
+            hideMessage();
+            
+            // 開始遊戲循環
+            gameLoop = setInterval(update, 1000/30); // 30 FPS
+            
+            // 開始計時器
+            timerInterval = setInterval(() => {
+                if (gameState === 'playing') {
+                    timeLeft--;
+                    document.getElementById('time').textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        gameOver('時間到！');
+                    }
+                }
+            }, 1000);
+        }
+        
+        // 遊戲結束
+        function gameOver(reason = '被鬼魂抓到了！') {
+            gameState = 'gameover';
+            clearInterval(gameLoop);
+            clearInterval(timerInterval);
+            
+            showMessage('遊戲結束', `${reason}<br>最終分數: ${score}`);
+        }
+        
+        // 遊戲勝利
+        function winGame() {
+            gameState = 'win';
+            clearInterval(gameLoop);
+            clearInterval(timerInterval);
+            
+            score += timeLeft * 5; // 剩餘時間獎勵
+            updateStats();
+            
+            showMessage('恭喜勝利！', `你成功逃出迷宮！<br>最終分數: ${score}`);
+        }
+        
+        // 更新統計顯示
+        function updateStats() {
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('score').textContent = score;
+            document.getElementById('time').textContent = timeLeft;
+        }
+        
+        // 顯示訊息
+        function showMessage(title, content) {
+            document.getElementById('messageTitle').textContent = title;
+            document.getElementById('messageContent').innerHTML = content;
+            document.getElementById('gameMessage').style.display = 'block';
+            document.getElementById('gameOverlay').style.display = 'block';
+            
+            // 設定按鈕文字
+            const button = document.getElementById('messageButton');
+            if (gameState === 'gameover' || gameState === 'win') {
+                button.textContent = '再玩一次';
+            } else {
+                button.textContent = '確定';
+            }
+        }
+        
+        // 隱藏訊息
+        function hideMessage() {
+            document.getElementById('gameMessage').style.display = 'none';
+            document.getElementById('gameOverlay').style.display = 'none';
+        }
+        
+        // 初始化遊戲
+        function initGame() {
+            resizeCanvas();
+            generateMaze();
+            updateStats();
+            draw();
+            
+            // 顯示開始訊息
+            showMessage('歡迎來到迷宮鬼捉人', '避開紅色鬼魂，到達綠色出口<br>使用方向鍵或按鈕移動');
+        }
+        
+        // 事件監聽器
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            if (gameState === 'idle' || gameState === 'gameover' || gameState === 'win') {
+                initGame();
+            }
+        });
+        
+        document.getElementById('btnStart').addEventListener('click', () => {
+            if (gameState === 'idle' || gameState === 'gameover' || gameState === 'win') {
+                startGame();
+            }
+        });
+        
+        document.getElementById('btnUp').addEventListener('click', () => movePlayer(0, -1));
+        document.getElementById('btnDown').addEventListener('click', () => movePlayer(0, 1));
+        document.getElementById('btnLeft').addEventListener('click', () => movePlayer(-1, 0));
+        document.getElementById('btnRight').addEventListener('click', () => movePlayer(1, 0));
+        
+        document.getElementById('messageButton').addEventListener('click', () => {
+            if (gameState === 'gameover' || gameState === 'win') {
+                startGame();
+            } else {
+                hideMessage();
+            }
+        });
+        
+        // 鍵盤控制
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    movePlayer(0, -1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    movePlayer(0, 1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    movePlayer(-1, 0);
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    movePlayer(1, 0);
+                    e.preventDefault();
+                    break;
+                case ' ':
+                case 'Enter':
+                    if (gameState === 'idle' || gameState === 'gameover' || gameState === 'win') {
+                        startGame();
+                        e.preventDefault();
+                    }
+                    break;
+            }
+        });
+        
+        // 防止右鍵選單
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        // 初始化
+        lockScreenOrientation();
+        initGame();
+    </script>
 </body>
 </html>

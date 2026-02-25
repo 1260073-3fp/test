@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Fixes Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .test {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #ccc;
+        }
+        .pass {
+            border-left-color: #4CAF50;
+            background-color: #f0fff0;
+        }
+        .fail {
+            border-left-color: #f44336;
+            background-color: #fff0f0;
+        }
+        .pending {
+            border-left-color: #ff9800;
+            background-color: #fff8e1;
+        }
+        h2 {
+            color: #333;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Project Fixes Test</h1>
+    <p>Testing Phase 1 critical bug fixes...</p>
+    
+    <div id="results">
+        <h2>Test Results</h2>
+        <div id="test1" class="test pending">
+            <strong>Test 1:</strong> Python code removed from game1.html
+        </div>
+        <div id="test2" class="test pending">
+            <strong>Test 2:</strong> games.json error handling improved
+        </div>
+        <div id="test3" class="test pending">
+            <strong>Test 3:</strong> Click game memory leak fixed
+        </div>
+        <div id="test4" class="test pending">
+            <strong>Test 4:</strong> Type game timer bug fixed
+        </div>
+        <div id="test5" class="test pending">
+            <strong>Test 5:</strong> Move game animation cleanup
+        </div>
+        <div id="test6" class="test pending">
+            <strong>Test 6:</strong> Memory game restart recursion fixed
+        </div>
+    </div>
+
+    <script>
+        // Test 1: Check if game1.html has Python code
+        async function test1() {
+            try {
+                const response = await fetch('gamehub.github.io/game1.html');
+                const html = await response.text();
+                const hasPython = html.includes('from IPython.display') || 
+                                 html.includes('html_snake_game = """') ||
+                                 html.includes('HTML(html_snake_game)');
+                
+                const test1El = document.getElementById('test1');
+                if (hasPython) {
+                    test1El.className = 'test fail';
+                    test1El.innerHTML += ' - <span style="color:red">FAIL: Python code still present</span>';
+                } else {
+                    test1El.className = 'test pass';
+                    test1El.innerHTML += ' - <span style="color:green">PASS: No Python code found</span>';
+                }
+            } catch (error) {
+                const test1El = document.getElementById('test1');
+                test1El.className = 'test fail';
+                test1El.innerHTML += ' - <span style="color:red">ERROR: ' + error.message + '</span>';
+            }
+        }
+
+        // Test 2: Check if main.js has improved error handling
+        async function test2() {
+            try {
+                const response = await fetch('gamehub.github.io/main.js');
+                const js = await response.text();
+                const hasErrorHandling = js.includes('無法載入遊戲資料') || 
+                                        js.includes('error-message') ||
+                                        js.includes('重新載入');
+                
+                const test2El = document.getElementById('test2');
+                if (hasErrorHandling) {
+                    test2El.className = 'test pass';
+                    test2El.innerHTML += ' - <span style="color:green">PASS: Error handling found</span>';
+                } else {
+                    test2El.className = 'test fail';
+                    test2El.innerHTML += ' - <span style="color:red">FAIL: Error handling missing</span>';
+                }
+            } catch (error) {
+                const test2El = document.getElementById('test2');
+                test2El.className = 'test fail';
+                test2El.innerHTML += ' - <span style="color:red">ERROR: ' + error.message + '</span>';
+            }
+        }
+
+        // Test 3: Check if click game has animation frame cleanup
+        async function test3() {
+            try {
+                const response = await fetch('gamehub.github.io/main.js');
+                const js = await response.text();
+                // Look for animationFrameId and cancelAnimationFrame in click game
+                const clickGameSection = js.substring(
+                    js.indexOf('function initClickGame'),
+                    js.indexOf('function initTypeGame')
+                );
+                const hasCleanup = clickGameSection.includes('animationFrameId') && 
+                                 clickGameSection.includes('cancelAnimationFrame');
+                
+                const test3El = document.getElementById('test3');
+                if (hasCleanup) {
+                    test3El.className = 'test pass';
+                    test3El.innerHTML += ' - <span style="color:green">PASS: Animation cleanup found</span>';
+                } else {
+                    test3El.className = 'test fail';
+                    test3El.innerHTML += ' - <span style="color:red">FAIL: Animation cleanup missing</span>';
+                }
+            } catch (error) {
+                const test3El = document.getElementById('test3');
+                test3El.className = 'test fail';
+                test3El.innerHTML += ' - <span style="color:red">ERROR: ' + error.message + '</span>';
+            }
+        }
+
+        // Test 4: Check if type game timer bug is fixed
+        async function test4() {
+            try {
+                const response = await fetch('gamehub.github.io/main.js');
+                const js = await response.text();
+                // Look for proper timer cleanup in type game
+                const typeGameSection = js.substring(
+                    js.indexOf('function initTypeGame'),
+                    js.indexOf('function initMoveGame')
+                );
+                const hasTimerCleanup = typeGameSection.includes('timer = null') && 
+                                      typeGameSection.includes('clearInterval(timer)') &&
+                                      typeGameSection.includes('if (timer)');
+                
+                const test4El = document.getElementById('test4');
+                if (hasTimerCleanup) {
+                    test4El.className = 'test pass';
+                    test4El.innerHTML += ' - <span style="color:green">PASS: Timer cleanup found</span>';
+                } else {
+                    test4El.className = 'test fail';
+                    test4El.innerHTML += ' - <span style="color:red">FAIL: Timer cleanup missing</span>';
+                }
+            } catch (error) {
+                const test4El = document.getElementById('test4');
+                test4El.className = 'test fail';
+                test4El.innerHTML += ' - <span style="color:red">ERROR: ' + error.message + '</span>';
+            }
+        }
+
+        // Test 5: Check if move game has animation cleanup
+        async function test5() {
+            try {
+                const response = await fetch('gamehub.github.io/main.js');
+                const js = await response.text();
+                // Look for animation frame cleanup in move game
+                const moveGameSection = js.substring(
+                    js.indexOf('function initMoveGame'),
+                    js.indexOf('function initMemoryGame')
+                );
+                const hasCleanup = moveGameSection.includes('animationFrameId') && 
+                                 moveGameSection.includes('cancelAnimationFrame');
+                
+                const test5El = document.getElementById('test5');
+                if (hasCleanup) {
+                    test5El.className = 'test pass';
+                    test5El.innerHTML += ' - <span style="color:green">PASS: Animation cleanup found</span>';
+                } else {
+                    test5El.className = 'test fail';
+                    test5El.innerHTML += ' - <span style="color:red">FAIL: Animation cleanup missing</span>';
+                }
+            } catch (error) {
+                const test5El = document.getElementById('test5');
+                test5El.className = 'test fail';
+                test5El.innerHTML += ' - <span style="color:red">ERROR: ' + error.message + '</span>';
+            }
+        }
+
+        // Test 6: Check if memory game restart recursion is fixed
+        async function test6() {
+            try {
+                const response = await fetch('gamehub.github.io/main.js');
+                const js = await response.text();
+                // Look for createGame function instead of recursive initMemoryGame call
+                const memoryGameSection = js.substring(
+                    js.indexOf('function initMemoryGame'),
+                    js.indexOf('function saveProgress')
+                );
+                const hasCreateGame = memoryGameSection.includes('function createGame') && 
+                                    memoryGameSection.includes('createGame()') &&
+                                    !memoryGameSection.includes('initMemoryGame(container, game)');
+                
+                const test6El = document.getElementById('test6');
+                if (hasCreateGame) {
+                    test6El.className = 'test pass';
+                    test6El.innerHTML += ' - <span style="color:green">PASS: Recursion fixed with createGame</span>';
+                } else {
+                    test6El.className = 'test fail';
+                    test6El.innerHTML += ' - <span style="color:red">FAIL: Still has recursive call</span>';
+                }
+            } catch (error) {
+                const test6El = document.getElementById('test6');
+                test6El.className = 'test fail';
+                test6El.innerHTML += ' - <span style="color:red">ERROR: ' + error.message + '</span>';
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            console.log('Running tests for game fixes...');
+            await test1();
+            await test2();
+            await test3();
+            await test4();
+            await test5();
+            await test6();
+            console.log('All tests completed');
+        }
+
+        // Run tests when page loads
+        window.addEventListener('DOMContentLoaded', runAllTests);
+    </script>
+</body>
+</html>

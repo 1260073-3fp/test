@@ -1,47 +1,413 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的遊戲館</title>
+    <title>遊戲中心 - Game Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2cc0d",
+                        "primary-dark": "#d4b000",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1e3a5f",
+                        "background-card-light": "#ffffff",
+                        "background-card-dark": "#264670",
+                        "surface-light": "#f0f0f0",
+                        "surface-dark": "#162e4d",
+                        "text-light": "#1f2937",
+                        "text-dark": "#f3f4f6"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem",
+                        "lg": "1rem",
+                        "xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(242, 204, 13, 0.5)',
+                        'neon-sm': '0 0 8px rgba(242, 204, 13, 0.3)',
+                        'card-light': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'card-dark': '0 4px 20px rgba(0, 0, 0, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 40px;
+        /* Custom Styles */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        h1 { margin-bottom: 30px; }
-        .games { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .theme-transition {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
         .game-card {
-            background: #2d2d44;
-            padding: 25px 35px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: white;
-            transition: 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .game-card:hover { background: #3d3d5c; transform: scale(1.05); }
-        .icon { font-size: 2em; }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .difficulty-easy {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+        }
+        
+        .difficulty-medium {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: white;
+        }
+        
+        .difficulty-hard {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            color: white;
+        }
+        
+        /* Custom icon for snake game */
+        .material-icons.snake-game::before {
+            content: "snake_game";
+        }
+        
+        /* Custom icon for maze */
+        .material-icons.maze::before {
+            content: "maze";
+        }
     </style>
 </head>
-<body>
-    <h1>🎮 我的遊戲館</h1>
-    <div class="games">
-        <a href="game1.html" class="game-card">
-            <div class="icon">🎯</div>
-            <div>貪食蛇</div>
-        </a>
-        <a href="game2.html" class="game-card">
-            <div class="icon">✊</div>
-            <div>小恐龍</div>
-         </a>
-        <!-- 加更多遊戲 -->
-        <a href="game3.html" class="game-card">
-            <div class="icon">✊</div>
-            <div>迷宮</div>
-        </a>
-    </div>
+<body class="font-display theme-transition bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-screen">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-lg border-b border-primary/20 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-neon-sm">
+                    <span class="material-icons text-background-dark text-2xl">sports_esports</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">遊戲中心</h1>
+                    <p class="text-xs opacity-70">Game Hub</p>
+                </div>
+            </div>
+            
+            <!-- Theme Toggle -->
+            <button id="themeToggle" class="p-3 rounded-full bg-surface-light dark:bg-surface-dark hover:bg-primary/20 transition-colors">
+                <span id="themeIcon" class="material-icons text-primary">dark_mode</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-8">
+        <!-- Hero Section -->
+        <section class="mb-10">
+            <div class="bg-gradient-to-r from-primary/20 to-primary/5 dark:from-primary/10 dark:to-transparent rounded-2xl p-8 border border-primary/30">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-2/3">
+                        <h2 class="text-3xl font-bold mb-3">歡迎來到遊戲中心</h2>
+                        <p class="text-lg opacity-80 mb-6">探索我們精選的遊戲集合，挑戰你的反應力、記憶力和策略思考！</p>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 rounded-full bg-primary text-background-dark font-semibold text-sm">免費遊玩</span>
+                            <span class="px-4 py-2 rounded-full bg-surface-light dark:bg-surface-dark font-medium text-sm">無需註冊</span>
+                            <span class="px-4 py-2 rounded-full bg-surface-light dark:bg-surface-dark font-medium text-sm">響應式設計</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 md:mt-0">
+                        <div class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center">
+                            <span class="material-icons text-5xl text-primary">play_circle_filled</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Games Grid -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold flex items-center gap-3">
+                    <span class="w-2 h-8 bg-primary rounded-full"></span>
+                    精選遊戲
+                </h2>
+                <div class="text-sm opacity-70">共 3 款遊戲</div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Game 1: 雙蘋果貪食蛇 -->
+                <div class="game-card bg-background-card-light dark:bg-background-card-dark rounded-2xl overflow-hidden shadow-card-light dark:shadow-card-dark border border-surface-light dark:border-surface-dark">
+                    <div class="relative h-48 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-500/30 to-blue-500/30"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="material-icons text-6xl text-green-500">games</span>
+                                <div class="mt-2 text-white font-bold text-lg">貪食蛇</div>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <span class="px-3 py-1 rounded-full difficulty-medium text-xs font-bold">中等</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">雙蘋果貪食蛇</h3>
+                        <p class="text-sm opacity-80 mb-4">經典貪食蛇遊戲，有紅蘋果和黃蘋果兩種目標。紅蘋果增加1長度和10分，黃蘋果增加2長度和20分。</p>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-1">
+                                    <span class="material-icons text-yellow-500 text-sm">star</span>
+                                    <span class="text-sm font-medium">4.5</span>
+                                </div>
+                                <div class="text-xs opacity-70">街機遊戲</div>
+                            </div>
+                            <div class="text-xs opacity-70">使用方向鍵控制</div>
+                        </div>
+                        
+                        <a href="game1.html" class="block w-full py-3 rounded-xl bg-primary hover:bg-primary-dark text-background-dark font-bold text-center transition-colors shadow-neon-sm">
+                            立即遊玩
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Game 2: 小恐龍遊戲 -->
+                <div class="game-card bg-background-card-light dark:bg-background-card-dark rounded-2xl overflow-hidden shadow-card-light dark:shadow-card-dark border border-surface-light dark:border-surface-dark">
+                    <div class="relative h-48 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-orange-500/30 to-red-500/30"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="material-icons text-6xl text-orange-500">pets</span>
+                                <div class="mt-2 text-white font-bold text-lg">小恐龍</div>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <span class="px-3 py-1 rounded-full difficulty-easy text-xs font-bold">簡單</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">小恐龍遊戲</h3>
+                        <p class="text-sm opacity-80 mb-4">控制小恐龍跳過仙人掌障礙物。按空格鍵跳躍，點擊螢幕也可以跳躍。分數越高，速度越快！</p>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-1">
+                                    <span class="material-icons text-yellow-500 text-sm">star</span>
+                                    <span class="text-sm font-medium">4.2</span>
+                                </div>
+                                <div class="text-xs opacity-70">動作遊戲</div>
+                            </div>
+                            <div class="text-xs opacity-70">按空格鍵跳躍</div>
+                        </div>
+                        
+                        <a href="game2.html" class="block w-full py-3 rounded-xl bg-primary hover:bg-primary-dark text-background-dark font-bold text-center transition-colors shadow-neon-sm">
+                            立即遊玩
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Game 3: 簡易迷宮鬼捉人 -->
+                <div class="game-card bg-background-card-light dark:bg-background-card-dark rounded-2xl overflow-hidden shadow-card-light dark:shadow-card-dark border border-surface-light dark:border-surface-dark">
+                    <div class="relative h-48 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-pink-500/30"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="material-icons text-6xl text-purple-500">explore</span>
+                                <div class="mt-2 text-white font-bold text-lg">迷宮</div>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <span class="px-3 py-1 rounded-full difficulty-hard text-xs font-bold">困難</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">簡易迷宮鬼捉人</h3>
+                        <p class="text-sm opacity-80 mb-4">在迷宮中躲避鬼魂，找到出口。使用方向鍵移動，避開紅色鬼魂，到達綠色出口即可獲勝。</p>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-1">
+                                    <span class="material-icons text-yellow-500 text-sm">star</span>
+                                    <span class="text-sm font-medium">4.8</span>
+                                </div>
+                                <div class="text-xs opacity-70">益智遊戲</div>
+                            </div>
+                            <div class="text-xs opacity-70">3條生命</div>
+                        </div>
+                        
+                        <a href="game3.html" class="block w-full py-3 rounded-xl bg-primary hover:bg-primary-dark text-background-dark font-bold text-center transition-colors shadow-neon-sm">
+                            立即遊玩
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Game Instructions -->
+        <section class="mb-12">
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8">
+                <h2 class="text-2xl font-bold mb-6 text-center">遊戲說明</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                            <span class="material-icons text-3xl text-primary">keyboard</span>
+                        </div>
+                        <h3 class="font-bold mb-2">控制方式</h3>
+                        <p class="text-sm opacity-80">所有遊戲都支援鍵盤控制，部分遊戲也支援觸控操作。</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                            <span class="material-icons text-3xl text-primary">scoreboard</span>
+                        </div>
+                        <h3 class="font-bold mb-2">計分系統</h3>
+                        <p class="text-sm opacity-80">每個遊戲都有獨特的計分方式，挑戰高分紀錄！</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                            <span class="material-icons text-3xl text-primary">restart_alt</span>
+                        </div>
+                        <h3 class="font-bold mb-2">重新開始</h3>
+                        <p class="text-sm opacity-80">遊戲結束後可以隨時重新開始，不斷挑戰自我。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Navigation -->
+        <section>
+            <h2 class="text-2xl font-bold mb-6">快速導航</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="game1.html" class="p-4 rounded-xl bg-background-card-light dark:bg-background-card-dark border border-surface-light dark:border-surface-dark hover:border-primary transition-colors text-center">
+                    <span class="material-icons text-3xl text-green-500 mb-2">games</span>
+                    <div class="font-bold">貪食蛇</div>
+                </a>
+                
+                <a href="game2.html" class="p-4 rounded-xl bg-background-card-light dark:bg-background-card-dark border border-surface-light dark:border-surface-dark hover:border-primary transition-colors text-center">
+                    <span class="material-icons text-3xl text-orange-500 mb-2">pets</span>
+                    <div class="font-bold">小恐龍</div>
+                </a>
+                
+                <a href="game3.html" class="p-4 rounded-xl bg-background-card-light dark:bg-background-card-dark border border-surface-light dark:border-surface-dark hover:border-primary transition-colors text-center">
+                    <span class="material-icons text-3xl text-purple-500 mb-2">explore</span>
+                    <div class="font-bold">迷宮鬼捉人</div>
+                </a>
+                
+                <div class="p-4 rounded-xl bg-surface-light dark:bg-surface-dark border border-dashed border-surface-light dark:border-surface-dark text-center opacity-70">
+                    <span class="material-icons text-3xl opacity-50 mb-2">add_circle</span>
+                    <div class="font-bold">更多遊戲</div>
+                    <div class="text-xs mt-1">即將推出</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="mt-12 py-8 border-t border-surface-light dark:border-surface-dark">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                            <span class="material-icons text-background-dark">sports_esports</span>
+                        </div>
+                        <div class="font-bold">遊戲中心</div>
+                    </div>
+                    <p class="text-sm opacity-70">© 2025 Game Hub. 所有遊戲免費遊玩。</p>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <button id="themeToggleFooter" class="p-2 rounded-full hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
+                        <span class="material-icons text-primary">contrast</span>
+                    </button>
+                    <div class="text-sm opacity-70">深色/淺色模式</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript for Theme Toggle -->
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeToggleFooter = document.getElementById('themeToggleFooter');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply saved theme
+        if (savedTheme === 'dark') {
+            htmlElement.classList.add('dark');
+            themeIcon.textContent = 'light_mode';
+        } else {
+            htmlElement.classList.remove('dark');
+            themeIcon.textContent = 'dark_mode';
+        }
+        
+        // Toggle theme function
+        function toggleTheme() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = 'dark_mode';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = 'light_mode';
+            }
+        }
+        
+        // Add event listeners
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleFooter.addEventListener('click', toggleTheme);
+        
+        // Game card hover effects
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = '';
+            });
+        });
+        
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Game Hub loaded successfully!');
+            console.log('Available games: Snake, Dino, Maze');
+        });
+    </script>
 </body>
 </html>

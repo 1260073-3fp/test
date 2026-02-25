@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Game Center Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2cc0d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#221f10",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white antialiased min-h-screen pb-20">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-primary/10 px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center">
+<span class="material-icons text-background-dark text-xl">sports_esports</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight">Game Center</h1>
+</div>
+<button class="p-2 rounded-full hover:bg-white/10 dark:hover:bg-white/5 transition-colors text-gray-500 dark:text-gray-400">
+<span class="material-icons">light_mode</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="px-6 py-6 space-y-8 max-w-md mx-auto md:max-w-2xl lg:max-w-4xl">
+<!-- Search Bar -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-icons text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 text-sm font-medium" placeholder="Search for games, genres..." type="text"/>
+<div class="absolute inset-y-0 right-2 flex items-center">
+<button class="bg-primary/10 hover:bg-primary/20 text-primary p-1.5 rounded transition-colors">
+<span class="material-icons text-sm">tune</span>
+</button>
+</div>
+</div>
+<!-- Featured Hero -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-lg font-bold">Featured Game</h2>
+</div>
+<div class="relative w-full h-48 md:h-64 rounded-xl overflow-hidden shadow-lg group">
+<img alt="Neon retro arcade gaming setup with vibrant lights" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Neon retro arcade gaming setup with vibrant lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3MLbPPWArC8YUAy1jood5mi1D2hfHKT3VkyhLUCUq_kPSgvukX1GDvXDkShk7yt84UyE-IrX-dBrUYCh_MdzFA2kwg1iCsLzHGIs5wTqhM5a4yOlwDwCF3g59XS--sa1E44q5AiZG5QTuY4Ud9FpraMMXFXxUBByLizATt2Q4GFfX6sPumRHpzdYStJ3KdG0tC1p6giycYceyAPdpEsjtrQzvFhIWW1gWoGCW1V2DaunBPRwEuzk24wXNT3v7gxozJzIclongetJF"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-5 w-full">
+<div class="flex justify-between items-end">
+<div>
+<span class="inline-block px-2 py-1 mb-2 text-xs font-bold text-background-dark bg-primary rounded uppercase tracking-wider">New Release</span>
+<h3 class="text-2xl font-bold text-white mb-1">Cyber Drifter</h3>
+<p class="text-gray-300 text-sm line-clamp-1">Experience high-speed racing in a neon city.</p>
+</div>
+<button class="bg-primary hover:bg-yellow-400 text-background-dark rounded-lg p-3 shadow-lg shadow-primary/20 transition-all transform active:scale-95">
+<span class="material-icons">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories / Quick Filters -->
+<section class="overflow-x-auto pb-2 scrollbar-hide -mx-6 px-6">
+<div class="flex gap-3 w-max">
+<button class="px-5 py-2 rounded-full bg-primary text-background-dark font-semibold text-sm whitespace-nowrap shadow-lg shadow-primary/10">All Games</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium text-sm whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/10 transition-colors">Action</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium text-sm whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/10 transition-colors">Puzzle</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium text-sm whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/10 transition-colors">Strategy</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium text-sm whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/10 transition-colors">Arcade</button>
+</div>
+</section>
+<!-- Trending Games Grid -->
+<section>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-bold">Trending Now</h2>
+<a class="text-primary text-sm font-semibold hover:text-primary/80 transition-colors" href="#">See All</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<!-- Game Card 1 -->
+<div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl p-3 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-3 bg-gray-800">
+<img alt="Abstract colorful logic puzzle pieces" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Abstract colorful logic puzzle pieces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7r18f-0Ky-8FSRfYlx6N9AuPPFEJnCwznk0HouruAHFEPWHZNlF2uXJETO0-ZmLKm-Tef8G8C9AEfm7LeM_yCNLN54HczOPo83qm4qIWTxFv5iW25ujBl0vulrCnRGn0qt785oHLIFFtjZTv5WZDNZGCuPlWAeJtENMlw70Uth92mn54wRgLYB1tbuKyafpRiqlViMFP7ZNwDuiHCwLoQwTDJOmkENb8U7KylT2X_JcLd4Yw8fG14_6MDgObbZWPG3ovjfPL3BgxQ"/>
+<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-green-400 uppercase border border-white/10">
+                            Easy
+                        </div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white truncate">Memory Flip</h3>
+<div class="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons text-[12px] text-primary">star</span>
+<span>4.8</span>
+<span class="mx-1">•</span>
+<span>Puzzle</span>
+</div>
+</div>
+</div>
+<!-- Game Card 2 -->
+<div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl p-3 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-3 bg-gray-800">
+<img alt="High tech gaming console controller close up" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High tech gaming console controller close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKNq12riGIt2IN38PJTPBNEP4uTDLfZhdg9bWEp1fKX1aTpYpr7EM7gCKFc1LZcheoDqXN4Gx3IH6zFwAc1yXZDIJfnuvnBU2QswIhOz1Tb9xTv7oo0ON5wS2wqByZJcDVqlNCxTeNfITjRs9XKyXFhKbrZcq_VokjjlMWHnPq0jERgu6EGKE_Pt1_1-uLr5KGMknwB1qhX7plB1d9c8OiUv1SzcnzXj0gdzeS31zspifRcEk93IwUB714DHSqxWir8g5qlVXiHacK"/>
+<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-red-400 uppercase border border-white/10">
+                            Hard
+                        </div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white truncate">Reaction Sprint</h3>
+<div class="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons text-[12px] text-primary">star</span>
+<span>4.5</span>
+<span class="mx-1">•</span>
+<span>Action</span>
+</div>
+</div>
+</div>
+<!-- Game Card 3 -->
+<div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl p-3 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-3 bg-gray-800">
+<img alt="Abstract space galaxy background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Abstract space galaxy background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl9t4MPNf13fWTRPZNyEQqRGO4j1a7EfWtlZGXWor5rScSZeHtNyzYIZHtQDp_f-Qnbztn9iLB9AqaulU1lYuZi5zrGQxlHFqy7SIBrBvht9HZmK_kMnOAd3jpkIiGmdEdQH2ecv4bombdckxhxbj4TWpzrPHZpeUH8Qh3LNul43xnoZ5oiJnicUL0MnZtM89WmFGDFhI9mivev12GlgmjaDimA2XyNUhygyqEX-0TneHUfF6LUrt8Xd6m7ELCm1yt4f2wszEa-esD"/>
+<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-yellow-400 uppercase border border-white/10">
+                            Med
+                        </div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white truncate">Cosmic Jump</h3>
+<div class="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons text-[12px] text-primary">star</span>
+<span>4.2</span>
+<span class="mx-1">•</span>
+<span>Arcade</span>
+</div>
+</div>
+</div>
+<!-- Game Card 4 -->
+<div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl p-3 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-3 bg-gray-800">
+<img alt="Colorful 3D geometric shapes render" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Colorful 3D geometric shapes render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVgi28f7Tl5SALQDSCmHV37keC2KUcx3s6TxZFDr_YT2vtQbbs4BJZgoquno3abecjrUoNjjTxXKZc_77Yu_m8BPmRSjZ_hichSuhy0kjgRx2b_7GzHD8hc19oYYBeTEK9D31xnLtdIbpgvB-hJHw18ds-wAUKcTy9lsHgs6xoC4IUllKCYiXh-RhmhoYOrql-Fx50meohp5GT88142nQkh6VEeKK_y_0dtVdw2Y9cVGdgdYfOveLXqyOhFxE-KCSJXJUGyTpI1Xdj"/>
+<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-green-400 uppercase border border-white/10">
+                            Easy
+                        </div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white truncate">Block Stack</h3>
+<div class="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons text-[12px] text-primary">star</span>
+<span>4.9</span>
+<span class="mx-1">•</span>
+<span>Casual</span>
+</div>
+</div>
+</div>
+<!-- Game Card 5 -->
+<div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl p-3 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-3 bg-gray-800">
+<img alt="Dark moody neon cityscape at night" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dark moody neon cityscape at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4CEWp95yvjTsGENufms5zGqpa1rkWdsn2XzR6PMpR89j99npJPt7pV6jAVRiu6H9oSwcMgO5CH7ye25MkhMTYBuUbtmyfv4QEgcdxqwJchQR5KZzr5A4ZUWJi-JYsiV-bqYnYHtORD7_0wknYUZXhZnzb6y6i95hvmodDqjzkU2-TqV3dH66OubVKvM13JfjNrPofecQDkDq_x-u_tl-h5UObU--ksja4nW-C0-VKRJKvxS9LB6JzrQ0OKOVlYW7XrSZJrR6qfn7M"/>
+<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-red-400 uppercase border border-white/10">
+                            Hard
+                        </div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white truncate">Night Racer</h3>
+<div class="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons text-[12px] text-primary">star</span>
+<span>4.7</span>
+<span class="mx-1">•</span>
+<span>Racing</span>
+</div>
+</div>
+</div>
+<!-- Game Card 6 -->
+<div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl p-3 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-3 bg-gray-800">
+<img alt="Abstract pixel art landscape" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Abstract pixel art landscape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp7aY63tNivV3FG0aCFdNXOLlG72oZtxO6Ln3L_ZH6vqYlnrhhgB6PAR_XpJqUtLBd1eBRShSC0O1IGy8CWzPlVB5AB_CCO4JBkru1FuGK-ks4M6BqXxFUbSrvXeB2awsyc5URhXXAHfJsZ2g2TEOXA0eaRLhjlqLqkYgefwyIR27FMikUpFFXCIkrj_C5xSYUsMkpD3z9iu6OsNjAafZYyIlnf5_TYdo9fquJwk6lGKOzuHqMmzZRzEt_yS16kfZohdpbuMkqJ38S"/>
+<div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] font-bold text-yellow-400 uppercase border border-white/10">
+                            Med
+                        </div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white truncate">Pixel Quest</h3>
+<div class="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons text-[12px] text-primary">star</span>
+<span>4.6</span>
+<span class="mx-1">•</span>
+<span>RPG</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-white/10 px-6 py-2 flex justify-between items-center z-50 md:max-w-2xl lg:max-w-4xl mx-auto w-full md:rounded-t-2xl md:mb-0 md:border-x">
+<button class="flex flex-col items-center justify-center p-2 text-primary group">
+<span class="material-icons text-2xl mb-1 group-hover:scale-110 transition-transform">home_filled</span>
+<span class="text-[10px] font-semibold">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 text-gray-400 dark:text-gray-500 hover:text-primary transition-colors group">
+<span class="material-icons text-2xl mb-1 group-hover:scale-110 transition-transform">favorite</span>
+<span class="text-[10px] font-medium">Favorites</span>
+</button>
+<div class="relative -top-6">
+<button class="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-yellow-400 transition-colors transform hover:-translate-y-1">
+<span class="material-icons text-background-dark text-3xl">play_arrow</span>
+</button>
+</div>
+<button class="flex flex-col items-center justify-center p-2 text-gray-400 dark:text-gray-500 hover:text-primary transition-colors group">
+<span class="material-icons text-2xl mb-1 group-hover:scale-110 transition-transform">leaderboard</span>
+<span class="text-[10px] font-medium">Rank</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 text-gray-400 dark:text-gray-500 hover:text-primary transition-colors group">
+<span class="material-icons text-2xl mb-1 group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</nav>
+</body></html>

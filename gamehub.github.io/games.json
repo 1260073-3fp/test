@@ -1,0 +1,49 @@
+{
+  "games": [
+    {
+      "id": "g1",
+      "title": "Color Dash",
+      "description": "Click the moving target before time runs out.",
+      "category": "Arcade",
+      "difficulty": "Easy",
+      "type": "click",
+      "cover": ["#4f8ef7", "#56e39f"]
+    },
+    {
+      "id": "g2",
+      "title": "Word Rush",
+      "description": "Type the shown word as fast as you can.",
+      "category": "Puzzle",
+      "difficulty": "Medium",
+      "type": "type",
+      "cover": ["#f0932b", "#f9ca24"]
+    },
+    {
+      "id": "g3",
+      "title": "Grid Escape",
+      "description": "Navigate your square to the goal using arrow keys.",
+      "category": "Adventure",
+      "difficulty": "Medium",
+      "type": "move",
+      "cover": ["#8e44ad", "#3498db"]
+    },
+    {
+      "id": "g4",
+      "title": "Memory Flip",
+      "description": "Match pairs in as few moves as possible.",
+      "category": "Memory",
+      "difficulty": "Hard",
+      "type": "memory",
+      "cover": ["#e74c3c", "#8e44ad"]
+    },
+    {
+      "id": "g5",
+      "title": "Reaction Sprint",
+      "description": "React quickly to the changing color and click.",
+      "category": "Arcade",
+      "difficulty": "Medium",
+      "type": "click",
+      "cover": ["#16a085", "#f39c12"]
+    }
+  ]
+}

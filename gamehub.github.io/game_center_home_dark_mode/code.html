@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Game Center Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2cc0d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1e3a5f", // Overridden to match the Deep Blue request
+                        "background-card": "#264670", // Slightly lighter for cards
+                        "surface": "#162e4d",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(242, 204, 13, 0.5)',
+                        'neon-sm': '0 0 5px rgba(242, 204, 13, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-white font-display antialiased selection:bg-primary selection:text-black">
+<div class="max-w-md mx-auto min-h-screen relative flex flex-col pb-20 overflow-hidden">
+<!-- Header & Search -->
+<header class="sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-lg border-b border-primary/10 px-6 pt-12 pb-4">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center shadow-neon-sm">
+<span class="material-icons text-background-dark text-xl">sports_esports</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">GAME <span class="text-primary">CENTER</span></h1>
+</div>
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-icons text-primary">notifications_none</span>
+</button>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300">
+<span class="material-icons text-[20px]">search</span>
+</span>
+<input class="w-full bg-slate-200 dark:bg-surface border-none rounded-lg py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-background-card transition-all" placeholder="Find your next obsession..." type="text"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto pt-6">
+<!-- Featured Games Section -->
+<section class="mb-8">
+<div class="flex items-center justify-between px-6 mb-4">
+<h2 class="text-lg font-bold flex items-center gap-2">
+<span class="w-1 h-5 bg-primary rounded-full"></span>
+                        Featured Games
+                    </h2>
+<a class="text-xs font-semibold text-primary hover:text-white transition-colors" href="#">View All</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-6 no-scrollbar pb-4 snap-x snap-mandatory">
+<!-- Featured Card 1 -->
+<div class="snap-center shrink-0 w-[280px] h-[160px] relative rounded-xl overflow-hidden group shadow-lg shadow-black/40 border border-white/5">
+<img alt="Futuristic neon city game scene" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAylVUu3GKk_XX_knDDNX9hGDc_2l90qZklBdUxfFsN4pv-wAOWt6eSyru4eBhKMzh0NM3JQ_DMub5WaM4SuxfQLVmynTyvsbMkE0DYzySB4FoWT7wdbF3Y5xvlacNSA7s9tjpduSRNIoQRNOIhtcFxnoR5O0qVcFKZ4iX3HdzE_AogXqf2WkZiU7tbcElbqhJCf1LpKKgu-Ak-OvBdp0X4EK4afbaa3h980I-t1WamuGdEeTrw4X7TMi8K2zui5z2kJ1SRzjrKooZq"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-background-dark mb-1">NEW RELEASE</span>
+<h3 class="text-xl font-bold text-white leading-tight">Cyber Racer 2077</h3>
+<p class="text-xs text-slate-300 mt-1 line-clamp-1">High speed neon racing in Tokyo.</p>
+</div>
+</div>
+<!-- Featured Card 2 -->
+<div class="snap-center shrink-0 w-[280px] h-[160px] relative rounded-xl overflow-hidden group shadow-lg shadow-black/40 border border-white/5">
+<img alt="Space galaxy nebula abstract" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHeapFNa51sTyyAkrxiPfPZaVkTiRSbWse_VRsH97rTsr8unCO76PX5V4hBW8Q-YjjcGJNDULa11xGtSTUQRmYxfwqrPQw2NAvXLOTRiTKLYwXD_uzOcUiGpvzf4LVY_VKFDx8zKAsAJgXtmk_PTQsk69FtocUV7s_e_y6_VPpZoW9Zm_I7-XfPqCXZBft20VN9gU1mReEVbZ8W0d3nmDldeTuk8CNvxiHo-e4Z28DLVqfkqjuAu-fC20eweA4lI5k4e7C_t66jnD0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500 text-white mb-1">POPULAR</span>
+<h3 class="text-xl font-bold text-white leading-tight">Space Miner</h3>
+<p class="text-xs text-slate-300 mt-1 line-clamp-1">Extract resources from asteroids.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Category Filter -->
+<section class="mb-6 px-6">
+<div class="flex gap-3 overflow-x-auto no-scrollbar">
+<button class="shrink-0 px-5 py-2 rounded-full bg-primary text-background-dark font-bold text-sm shadow-neon-sm">All</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface border border-white/5 text-slate-300 font-medium text-sm hover:bg-white/10 transition-colors">Arcade</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface border border-white/5 text-slate-300 font-medium text-sm hover:bg-white/10 transition-colors">Puzzle</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface border border-white/5 text-slate-300 font-medium text-sm hover:bg-white/10 transition-colors">Strategy</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface border border-white/5 text-slate-300 font-medium text-sm hover:bg-white/10 transition-colors">Action</button>
+</div>
+</section>
+<!-- Game Grid -->
+<section class="px-6 pb-6">
+<div class="grid grid-cols-2 gap-4">
+<!-- Game Item 1 -->
+<div class="bg-background-card rounded-xl overflow-hidden shadow-md group border border-white/5">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Abstract glowing geometric shapes" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXsJnZ0GBeVMPl-ZbwcL3FZA0PDQcmneFwPPMP5m2lojbypO3mr905z6A3ZStfQKiBNZ7caRp27QgjjB6C3I7wulVCqEJchN3AyaNZmSkZBzyTcMFG-2vVIFJIz7iDnxPqtwdS8w-KEyYsd1TmSAIIehcQ8xm7Fy6TpP5TP9nIW0uJqzgwB5_AwkAonBuOnn5QxFRCuj8ZMxfZdJnNtQOw9Rhj1Dx6vr2zOm6zmP-7Tk-1954_cYU-Q0ToE-cmQvh8RWllxbKbxgvx"/>
+<div class="absolute top-2 right-2">
+<span class="px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-green-400 border border-green-400/30">EASY</span>
+</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-white truncate">Color Dash</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-xs text-slate-400">Arcade</span>
+<div class="flex items-center text-primary text-[10px] gap-0.5">
+<span class="material-icons text-[12px]">star</span>
+<span>4.8</span>
+</div>
+</div>
+<button class="w-full mt-3 py-1.5 rounded bg-surface hover:bg-primary hover:text-background-dark text-xs font-bold text-white transition-colors border border-white/10">
+                                PLAY
+                            </button>
+</div>
+</div>
+<!-- Game Item 2 -->
+<div class="bg-background-card rounded-xl overflow-hidden shadow-md group border border-white/5">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Dark starry sky with text elements" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf3ril8kczUBH_MKveKTUOVNhURnrtL--NjRnu8pE6XQ5gOvAF4f9a43XxGo--bAkz9pVvXkXUBY8_X_QP5AkKcW1cEj1GCkFheVeEGU8FFB0-TDdvpev1PwnB27PqK82TkxCW5X47YUzFdFYKC-xUXhjlqCIOJ3G2MfhKiNByh7XLRmTBEWtGEZyjs5TY6tBGi9E2NirXNWgCSn1Wfv_ylpG8pBmAgjqTgp3MyNLLD9ptjTzNw1wEd36F8LbzfKo3v1O2mv4spY8Q"/>
+<div class="absolute top-2 right-2">
+<span class="px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-red-400 border border-red-400/30">HARD</span>
+</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-white truncate">Word Rush</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-xs text-slate-400">Puzzle</span>
+<div class="flex items-center text-primary text-[10px] gap-0.5">
+<span class="material-icons text-[12px]">star</span>
+<span>4.5</span>
+</div>
+</div>
+<button class="w-full mt-3 py-1.5 rounded bg-surface hover:bg-primary hover:text-background-dark text-xs font-bold text-white transition-colors border border-white/10">
+                                PLAY
+                            </button>
+</div>
+</div>
+<!-- Game Item 3 -->
+<div class="bg-background-card rounded-xl overflow-hidden shadow-md group border border-white/5">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Grid pattern with neon lights" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBquo_WNTopsTSlyJ21iMrZwyppwN7VIwi51gsMivl-MlUfwbaCNkq8eUx0r63V4CthepxYPK0I7mO-THt7OzD3YzLN3D-RDiYnib9giJBWpGdNjvlDMQkvHK9Av9GfyrrIQ7j6PAVLu73zsK0l2t6u5da7szuaPucdAoFOzVE2n3hthfe_CkRQoE3rQHTcw5yXY3-YgDVfP2BYdIOgh80UQPpfrCtXim-MUZ7QvXkG5oSVvmTmJPJrF0gHspntrcoAMDP-NrNSCnzA"/>
+<div class="absolute top-2 right-2">
+<span class="px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-primary border border-primary/30">MED</span>
+</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-white truncate">Grid Escape</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-xs text-slate-400">Strategy</span>
+<div class="flex items-center text-primary text-[10px] gap-0.5">
+<span class="material-icons text-[12px]">star</span>
+<span>4.9</span>
+</div>
+</div>
+<button class="w-full mt-3 py-1.5 rounded bg-surface hover:bg-primary hover:text-background-dark text-xs font-bold text-white transition-colors border border-white/10">
+                                PLAY
+                            </button>
+</div>
+</div>
+<!-- Game Item 4 -->
+<div class="bg-background-card rounded-xl overflow-hidden shadow-md group border border-white/5">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Arcade game controller vibrant" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANjIPLVP15FOlFBlEqIZADSGrVv1mQldfdVAuTGXpI08KEUBIESn8lc1cvMz-tj98dGoMQJmnxlpq2xs1_DHx3Q_-2qEFnmjNJV39cSC9HrmuhPpWs8wRaYPH0bCK8qNCMRXhDbQAoWjAR-coAciXxLQLvsif6EmXx4butjGJwNO5gYMI9S7ncp-gmasHVuOz5OYR2pDdO4peglLFIz8T-fZvx3mJVKCJFTbCp2n2IAj4rMekylfgR2_ai13PatWDjcce3_FSW_fXe"/>
+<div class="absolute top-2 right-2">
+<span class="px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-green-400 border border-green-400/30">EASY</span>
+</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-white truncate">Neon Pong</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-xs text-slate-400">Arcade</span>
+<div class="flex items-center text-primary text-[10px] gap-0.5">
+<span class="material-icons text-[12px]">star</span>
+<span>4.2</span>
+</div>
+</div>
+<button class="w-full mt-3 py-1.5 rounded bg-surface hover:bg-primary hover:text-background-dark text-xs font-bold text-white transition-colors border border-white/10">
+                                PLAY
+                            </button>
+</div>
+</div>
+<!-- Game Item 5 -->
+<div class="bg-background-card rounded-xl overflow-hidden shadow-md group border border-white/5">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Abstract chess piece concept" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXdD1gH4wVt0uEkH5WUKZJHebAo4NpcA0Vz5YQPcTrnlFJpHzunTDeIwLvxJCHABKPOmDcsm80zxfkzoUTSmBrVoFqU7nfIXvNhNorJBz8yniUz-YI6w179Cu0DeapSzQxqHASGIO3-FQuKInt2lVCA5gQY9GCgv8CjXng7Sg9dDhNCLZ6weJSxT-V76W7oBq5ftsv9Xk7legw6jf7Q1yZYfy27xRhxu4RZXY7Bts211fSnSMubJ8fgPVDgoJxv9A7FR_L8aOJKwq3"/>
+<div class="absolute top-2 right-2">
+<span class="px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-red-400 border border-red-400/30">HARD</span>
+</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-white truncate">Master Chess</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-xs text-slate-400">Strategy</span>
+<div class="flex items-center text-primary text-[10px] gap-0.5">
+<span class="material-icons text-[12px]">star</span>
+<span>5.0</span>
+</div>
+</div>
+<button class="w-full mt-3 py-1.5 rounded bg-surface hover:bg-primary hover:text-background-dark text-xs font-bold text-white transition-colors border border-white/10">
+                                PLAY
+                            </button>
+</div>
+</div>
+<!-- Game Item 6 -->
+<div class="bg-background-card rounded-xl overflow-hidden shadow-md group border border-white/5">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Colorful candy puzzle pieces" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg44qLzhq234uz6oY5-qmQpFzSnA-Awg8AwvK-RIPYKk8MGpMvEcTRDU_aOPNygZI0gjRyeEnsCPxOzoZtT_mqM5joko0KRlllnsHyo-OQ41gusMI6d94_ArrdgoI_0_T3brOwiyAycSjYAd4bQR37pMLBlDMVzML7ZXICkMSg65YCkWUHKZYh9SQVkBYplc2d_7juLfQiAswtbKYUTStHBSJLl0rT7lklZ0BiPWBOv8U2WgsFEGK66kn4DYd1l5T7weJ9otdOB9Nf"/>
+<div class="absolute top-2 right-2">
+<span class="px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-primary border border-primary/30">MED</span>
+</div>
+</div>
+<div class="p-3">
+<h4 class="font-bold text-white truncate">Jelly Pop</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-xs text-slate-400">Casual</span>
+<div class="flex items-center text-primary text-[10px] gap-0.5">
+<span class="material-icons text-[12px]">star</span>
+<span>4.6</span>
+</div>
+</div>
+<button class="w-full mt-3 py-1.5 rounded bg-surface hover:bg-primary hover:text-background-dark text-xs font-bold text-white transition-colors border border-white/10">
+                                PLAY
+                            </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="absolute bottom-0 w-full bg-background-dark/95 backdrop-blur-xl border-t border-white/5 px-6 pb-6 pt-3 z-50">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-primary group" href="#">
+<div class="relative">
+<span class="material-icons text-2xl group-hover:drop-shadow-[0_0_8px_rgba(242,204,13,0.6)] transition-all">home</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+</div>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-2xl">favorite_border</span>
+<span class="text-[10px] font-medium">Favorites</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-2xl">emoji_events</span>
+<span class="text-[10px] font-medium">Rankings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-2xl">person_outline</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>
